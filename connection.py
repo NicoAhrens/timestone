@@ -5,11 +5,11 @@ from config import config
 def connect():
     # ======= Connect to the PostgreSQL databse server =======
 
-    conn = None 
+    conn = None
     try:
-        # read connection parameters 
+        # read connection parameters
         params = config()
-        
+
         # connect to the PostgreSQL server
         print(f'Connecting to the PostgreSQL server {params["database"]}...')
         # ** before a paramter is a sign of the function getting more than one
@@ -26,7 +26,7 @@ def connect():
         # display the PostgreSQL database server version
         db_version = cur.fetchone()
         print(db_version)
-        
+
         # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -35,6 +35,7 @@ def connect():
         if conn is not None:
             conn.close()
             print('Database connection closed.')
+
 
 if __name__ == '__main__':
     connect()
