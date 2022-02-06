@@ -1,21 +1,20 @@
 import psycopg2
 from config import config
 
-# TODO: Creating a employee does not work right now
+
 def create_employee():
     # ======= Creates necessary tables in the database =======
     # Commands for creating the tables with the cols
     fname_employee = input('First name of employee: ')
     lname_employee = input('Last name of employee: ')
-    print(f'{lname_employee}, {fname_employee}')
-    commands = (
+    # print(f'{lname_employee}, {fname_employee}')
+    command = (
         f"""
         INSERT INTO employee(first_name, last_name)
-        VALUES ('{fname_employee}', '{lname_employee}')
-        RETURNING *;
+        VALUES ('{fname_employee}', '{lname_employee}');
         """
         )
-    print(commands)
+    # print(command)
     conn = None
     try:
         # connecting to the database and creating a cursor
@@ -29,8 +28,7 @@ def create_employee():
         # create a cursor
         cur = conn.cursor()
 
-        for command in commands:
-            cur.execute(command)
+        cur.execute(command)
         # closes the connection
         cur.close()
         # commit the changes
@@ -40,6 +38,7 @@ def create_employee():
     finally:
         if conn is not None:
             conn.close()
+
 
 if __name__ == '__main__':
     create_employee()

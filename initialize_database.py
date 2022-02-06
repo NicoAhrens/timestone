@@ -1,11 +1,28 @@
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from config import config
 
 
-def create_tables():
-    # ======= Creates necessary tables in the database =======
+# TODO: User which is created save into the database.ini onto the right place
+# with Config.Parser.write().
+def initialize_db_and_tbl():
+    # ======= Creates necessary database and tables =======
     # Commands for creating the tables with the cols
+    new_user = input('Which username for the database, do you want to set: ')
+    password = input('Which password for the user do you want to set: ')
     commands = (
+        f"""
+        DO
+        $do$
+        BEGIN
+           IF NOT EXISTS (
+              SELECT FROM pg_catalog.pg_roles
+              WHERE  rolname = '{new_user}') THEN
+              CREATE ROLE {new_user} SUPERUSER LOGIN PASSWORD '{password}';
+           END IF;
+        END
+        $do$;
+        """,
         """
         DROP TABLE IF EXISTS employee CASCADE;
         DROP TABLE IF EXISTS status CASCADE;
@@ -53,17 +70,41 @@ def create_tables():
         )
     conn = None
     try:
-        # connecting to the database and creating a cursor
-        params = config()
-
+        # connecting to the default database and creating a cursor
+        params = config(filename='database_init.ini', section='postgresql')
         # connect to the PostgreSQL server
-        print(f'Connecting to the PostgreSQL server {params["database"]}...')
+        print("Connecting to the PostgreSQL server and the DATABASE "
+              f"{params['database']}...")
         # ** before a paramter is a sign of the function getting more than one
         # argument from a dictionary (in this case the username, password etc.)
         conn = psycopg2.connect(**params)
+        # autocmmit for DROP DATABASE in execute()
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         # create a cursor
         cur = conn.cursor()
-
+        # Deleting the timestone DATABASE IF it exists
+        user_input = input("Do you really want to delete the DATABASE "
+                           "timestone? [y/n]\n> ")
+        if user_input == "y":
+            cur.execute('DROP DATABASE IF EXISTS timestone;')
+            cur.execute('CREATE DATABASE timestone;')
+            cur.close()
+            conn.commit()
+        else:
+            print("Keeping DATABASE timestone")
+            cur.close()
+        # connecting to the database and creating a cursor
+        params = config()
+        # connect to the PostgreSQL server
+        print("Connecting to the PostgreSQL server and the DATABASE "
+              f"{params['database']}...")
+        # ** before a paramter is a sign of the function getting more than one
+        # argument from a dictionary (in this case the username, password etc.)
+        conn = psycopg2.connect(**params)
+        # autocmmit for DROP DATABASE in execute()
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        # create a cursor
+        cur = conn.cursor()
         for command in commands:
             cur.execute(command)
         # closes the connection
@@ -76,5 +117,6 @@ def create_tables():
         if conn is not None:
             conn.close()
 
+
 if __name__ == '__main__':
-    create_tables()
+    initialize_db_and_tbl()
