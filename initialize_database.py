@@ -2,7 +2,9 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from config import config
 
-
+# TODO: Create another column in table with the name deltatimesec and 
+        # everytime a new entry is added, calculate the difference between the 
+        # two times or timeframes
 # TODO: User which is created save into the database.ini onto the right place
 # with Config.Parser.write().
 def initialize_db_and_tbl():
@@ -56,7 +58,8 @@ def initialize_db_and_tbl():
         """
         CREATE TABLE timekeeping(
             entry_id SERIAL PRIMARY KEY,
-            time_stamp TIMESTAMP,
+            date DATE,
+            time TIME,
             employee_id SERIAL,
             status_id SERIAL,
             FOREIGN KEY (employee_id)
@@ -68,6 +71,21 @@ def initialize_db_and_tbl():
             )
         """
         )
+
+    # """
+    #     CREATE TABLE timekeeping(
+    #         entry_id SERIAL PRIMARY KEY,
+    #         time_stamp TIMESTAMP,
+    #         employee_id SERIAL,
+    #         status_id SERIAL,
+    #         FOREIGN KEY (employee_id)
+    #             REFERENCES employee (employee_id)
+    #              ON UPDATE CASCADE ON DELETE CASCADE,
+    #         FOREIGN KEY (status_id)
+    #             REFERENCES status (status_id)
+    #             ON UPDATE CASCADE ON DELETE CASCADE
+    #         )
+    #     """
     conn = None
     try:
         # connecting to the default database and creating a cursor

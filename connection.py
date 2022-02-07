@@ -32,7 +32,7 @@ def connect():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
-        if conn is not None:
+        if conn:
             conn.close()
             print('Database connection closed.')
 
@@ -57,9 +57,12 @@ def single_command(command):
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
-        if conn is not None:
+        if conn:
             conn.close()
 
+
+def fetch_information(command):
+    pass
 
 if __name__ == '__main__':
     connect()

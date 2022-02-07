@@ -15,3 +15,5 @@ Because the packages 'keyboard' needs root to track keyboard presses.
 If you are using a conda enviroment the sudo python3 doesn't find your packages you installed for the enviroment, even if you found it. 
 My workaround right now is:
 $ sudo env "PATH=$PATH" python3 timestone.py
+
+First create an employee/user with "create_employee.py"

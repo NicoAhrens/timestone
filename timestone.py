@@ -24,8 +24,8 @@ def start_screen():
         [
             "",
             ("⬗ TIMESTONE ⬖\n").center(gts().columns),
-            ("Keeping track of your time!").center(gts().columns), "\n",
-            ("Press Enter").center(gts().columns)
+            ("Keeping track of your time!").center(gts().columns), "\n"
+            #("Press Enter").center(gts().columns)
         ]
     for line in lines:
         print(line)
@@ -34,9 +34,9 @@ def start_screen():
 def main_menu():
     options =\
         [
-            "Press '1': Start Main Programm",
-            "Press '2': Calculations",
-            "Press 'X': Quit the Programm"
+            "Press [1]: Start Main Programm",
+            "Press [2]: Calculations",
+            "Press [X]: Quit the Programm"
         ]
     # clearConsole()
     for option in options:
@@ -47,14 +47,31 @@ def logging_menu():
     terminal_width = gts().columns
     options =\
         [
-            ""
+            "",
             "◈"*terminal_width,
-            "Press 'I': Stamp in",
-            "Press 'O': Stamp out",
-            "Press 'B': Stamp out for break",
-            "Press 'L': Stamp in after break",
-            "Press 'X': Quit to Main Menu",
-            "Press 'Q': Quitting Timestone"
+            "",
+            "Press [I]: Stamp in",
+            "Press [O]: Stamp out",
+            "Press [B]: Stamp out for break",
+            "Press [L]: Stamp in after break",
+            "Press [X]: Quit to Main Menu",
+            "Press [Q]: Quitting Timestone"
+        ]
+    for option in options:
+        print(option)
+
+
+def calculations_menu():
+    terminal_width = gts().columns
+    options =\
+        [
+            " ",
+            "◈"*terminal_width,
+            " ",
+            "Press [A]: Worked time in an specific intervall",
+            "Press [B]: Worked time on a specific day",
+            "Press [X]: Quit to Main Menu",
+            "Press [Q]: Quitting Timestone"
         ]
     for option in options:
         print(option)
@@ -92,16 +109,23 @@ def clearConsole():
 #             raise Exception('Wrong input')  # if user pressed a key other than the given key the loop will break
 
 
-def log_event(timestamp, status_id):
+def log_event(date, time, status_id):
     command = (
                 f"""
-                INSERT INTO timekeeping(time_stamp, employee_id, status_id)
-                VALUES ('{timestamp}', '1', '{status_id}');
+                INSERT INTO timekeeping(date, time, employee_id, status_id)
+                VALUES ('{date}', '{time}', '1', '{status_id}');
                 """
                 )
     # print(command)
     single_command(command)
 
+
+def log_date_time(timestamp):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp_split = timestamp.split()
+    date = timestamp_split[0]
+    time = timestamp_split[1]
+    return date, time
 
 def timestamp():
     # ======= Creates necessary tables in the database =======
@@ -113,51 +137,66 @@ def timestamp():
     # employee = dict_ini['user']
     timestamp = None
     status_id = None
-    escape_main = False
-    escape_timekeeping = False
+    esc_main = False
+    esc_timekeeping = False
+    esc_calc = False
     clearConsole()
-    while not escape_main:
+    while not esc_main:
         start_screen()
-        #keyboard.wait('enter')
+        # keyboard.wait('enter')
         main_menu()
-        user_input_main = input("> ")
+        user_input_main = input("> ").lower()
         # user_input_main = keypress()
         if user_input_main == 'x':
             break
         elif user_input_main == '2':
-            pass
+            calculations_menu()
+            while not esc_calc:
+                user_input_calc = input("> ").lower()
+                if user_input_calc == "a":
+                    pass
+                elif user_input_calc == 'q':
+                    esc_main = True
+                    esc_calc = True
+                    print('Quitting Timestone. \nUntil next time!')
+                elif user_input_calc == 'x':
+                    esc_calc = True
+                    print('Quitting to Main Menu...')
         elif user_input_main == '1':
             logging_menu()
-            while not escape_timekeeping:
+            while not esc_timekeeping:
                 user_input_log = input("> ")
                 # user_input_log = keypress()
                 # user_input = keypress()ii
                 if user_input_log == 'i':
-                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    date, time = log_date_time(timestamp)
+                    # print(timestamp_split)
+                    # print('Time:', time)
+                    # print('Date:', date)
                     status_id = '1'
                     print('Logged in.')
-                    log_event(timestamp, status_id)
+                    log_event(date, time, status_id)
                 elif user_input_log == 'o':
-                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    date, time = log_date_time(timestamp)
                     status_id = '2'
                     print('Logged out.')
-                    log_event(timestamp, status_id)
+                    log_event(date, time, status_id)
                 elif user_input_log == 'b':
-                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    date, time = log_date_time(timestamp)
                     status_id = '3'
                     print('Logged into break. Enjoy your meal! :)')
-                    log_event(timestamp, status_id)
+                    log_event(date, time, status_id)
                 elif user_input_log == 'l':
-                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    date, time = log_date_time(timestamp)
                     status_id = '4'
                     print('Logged out of break. Hope you enjoyed your meal. :)')
-                    log_event(timestamp, status_id)
+                    log_event(date, time, status_id)
                 elif user_input_log == 'q':
-                    escape_main = True
-                    escape_timekeeping = True
+                    esc_main = True
+                    esc_timekeeping = True
                     print('Quitting Timestone. \nUntil next time!')
                 elif user_input_log == 'x':
-                    escape_timekeeping = True
+                    esc_timekeeping = True
                     print('Quitting to Main Menu...')
 
 
