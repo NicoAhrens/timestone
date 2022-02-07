@@ -4,7 +4,7 @@ import os
 from os import get_terminal_size as gts
 
 # Installed libraries
-import keyboard
+# import keyboard
 
 # Own libraries
 from config import config
@@ -53,7 +53,8 @@ def logging_menu():
             "Press 'O': Stamp out",
             "Press 'B': Stamp out for break",
             "Press 'L': Stamp in after break",
-            "Press 'X': Quit the timekeeping"
+            "Press 'X': Quit to Main Menu",
+            "Press 'Q': Quitting Timestone"
         ]
     for option in options:
         print(option)
@@ -65,30 +66,30 @@ def clearConsole():
         command = 'cls'
     os.system(command)
 
-# TODO: revert to state beforehand
-def keypress(press_key):
-    while True:
-        try:
-            keyboard.is_pressed(press_key)
-            return press_key
-            # if keyboard.is_pressed('i'):
-            #     return 'i'
-            # elif keyboard.is_pressed('o'):
-            #     return 'o'
-            # elif keyboard.is_pressed('b'):
-            #     return 'b'
-            # elif keyboard.is_pressed('l'):
-            #     return 'l'
-            # elif keyboard.is_pressed('x'):
-            #     return 'x'
-            # elif keyboard.is_pressed('1'):
-            #     return '1'
-            # elif keyboard.is_pressed('2'):
-            #     return '2'
-            # elif keyboard.is_pressed('3'):
-            #     return '3'
-        except KeyboardError:
-            raise Exception('Wrong input')  # if user pressed a key other than the given key the loop will break
+# TODO: Mabye without package keyboard. Have to look into it how it really works
+# def keypress():
+#     while True:
+#         try:
+#             if keyboard.is_pressed('i'):
+#                 return 'i'
+#             elif keyboard.is_pressed('o'):
+#                 return 'o'
+#             elif keyboard.is_pressed('b'):
+#                 return 'b'
+#             elif keyboard.is_pressed('l'):
+#                 return 'l'
+#             elif keyboard.is_pressed('q'):
+#                 return 'q'
+#             elif keyboard.is_pressed('x'):
+#                 return 'x'
+#             elif keyboard.is_pressed('1'):
+#                 return '1'
+#             elif keyboard.is_pressed('2'):
+#                 return '2'
+#             elif keyboard.is_pressed('3'):
+#                 return '3'
+#         except KeyboardError:
+#             raise Exception('Wrong input')  # if user pressed a key other than the given key the loop will break
 
 
 def log_event(timestamp, status_id):
@@ -101,6 +102,7 @@ def log_event(timestamp, status_id):
     # print(command)
     single_command(command)
 
+
 def timestamp():
     # ======= Creates necessary tables in the database =======
     # create a parser
@@ -112,50 +114,51 @@ def timestamp():
     timestamp = None
     status_id = None
     escape_main = False
+    escape_timekeeping = False
     clearConsole()
     while not escape_main:
         start_screen()
-        keyboard.wait('enter')
+        #keyboard.wait('enter')
         main_menu()
-        key = input().lower()
-        keypress(key)
-        if user_input == 'x':
+        user_input_main = input("> ")
+        # user_input_main = keypress()
+        if user_input_main == 'x':
             break
-        elif user_input == '2':
+        elif user_input_main == '2':
             pass
-        elif user_input == '1':
-            escape_timekeeping = False
+        elif user_input_main == '1':
+            logging_menu()
             while not escape_timekeeping:
-                logging_menu()
-                key = None
-                while not key:
-                    key = input().lower()
-                    keypress(key)
-                #user_input = keypress()
-                if user_input == 'i':
+                user_input_log = input("> ")
+                # user_input_log = keypress()
+                # user_input = keypress()ii
+                if user_input_log == 'i':
                     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     status_id = '1'
                     print('Logged in.')
                     log_event(timestamp, status_id)
-                elif user_input == 'o':
+                elif user_input_log == 'o':
                     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     status_id = '2'
                     print('Logged out.')
                     log_event(timestamp, status_id)
-                elif user_input == 'b':
+                elif user_input_log == 'b':
                     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     status_id = '3'
                     print('Logged into break. Enjoy your meal! :)')
                     log_event(timestamp, status_id)
-                elif user_input == 'l':
+                elif user_input_log == 'l':
                     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     status_id = '4'
                     print('Logged out of break. Hope you enjoyed your meal. :)')
                     log_event(timestamp, status_id)
-                elif user_input == 'x':
+                elif user_input_log == 'q':
+                    escape_main = True
                     escape_timekeeping = True
-                    print('Will quit the programm. Goodbye.')
-                    log_event(timestamp, status_id)
+                    print('Quitting Timestone. \nUntil next time!')
+                elif user_input_log == 'x':
+                    escape_timekeeping = True
+                    print('Quitting to Main Menu...')
 
 
 if __name__ == '__main__':
