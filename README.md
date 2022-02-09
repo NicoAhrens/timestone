@@ -4,7 +4,7 @@ What does this do?
 Logs times in a postgreSQL Database. Can keep track of your working time and how many breaks you had and how long they took.
 
 ## Dependencies: 
-`$ pip install psycopg2` <br \>
+`$ pip install psycopg2` <br />
 `$ pip install postgreSQL`
 
 ## How to Use:
