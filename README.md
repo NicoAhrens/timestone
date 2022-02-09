@@ -10,7 +10,8 @@ Logs times in a postgreSQL Database. Can keep track of your working time and how
 ## How to Use:
 1. First you have to install the dependencies above.
 2. Create a starting database in postgreSQL.
-3. Change the `user=nico` to your postgreSQL user name.
+3. Change the `user=<postgres_user>` in both `database_init.ini` and `database.ini`to your postgreSQL user name.
+4. Maybe you also have to change the `host=<host_name>` accordingly in each .ini as well.
 4. Initialize the database with `initialize_database.py`.
 5. Create a employee name with `create_employee.py` to log the time and date for a specific user. (Change the ID of the user in `timestone.py` accordingly, if another user is the same script.)
 6. Start the programm with `timestone.py`. 
