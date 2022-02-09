@@ -4,7 +4,7 @@ What does this do?
 Logs times in a postgreSQL Database. Can keep track of your working time and how many breaks you had and how long they took.
 
 ## Dependencies: 
-`$ pip install psycopg2`
+`$ pip install psycopg2` <br \>
 `$ pip install postgreSQL`
 
 ## How to Use:
@@ -16,7 +16,7 @@ Logs times in a postgreSQL Database. Can keep track of your working time and how
 6. Start the programm with `timestone.py`. 
 
 
-Future Implementation:
+## Future Implementations:
 - [ ] Adding another column in the database to better track the worked time from the previous logged event.
 - [ ] Calculating the worked time on a specific day, week, month year. 
 - [ ] Updating/Correcting values in the database.
