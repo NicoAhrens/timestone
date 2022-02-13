@@ -114,7 +114,6 @@ def log_event(date, time, status_id):
                 VALUES ('{date}', '{time}', '1', '{status_id}');
                 """
                 )
-    # print(command)
     single_command(command)
 
 
@@ -127,24 +126,18 @@ def log_date_time(timestamp):
 
 def timestamp():
     # ======= Creates necessary tables in the database =======
-    # create a parser
-    # dict_ini = config()
-    # Create a controller to catch key presses of user
     command = None
-    # print(dict_ini)
-    # employee = dict_ini['user']
     timestamp = None
     status_id = None
     esc_main = False
     esc_timekeeping = False
     esc_calc = False
     clearConsole()
+    
     while not esc_main:
         start_screen()
-        # keyboard.wait('enter')
         main_menu()
         user_input_main = input("> ").lower()
-        # user_input_main = keypress()
         if user_input_main == 'x':
             break
         elif user_input_main == '2':
@@ -164,13 +157,9 @@ def timestamp():
             logging_menu()
             while not esc_timekeeping:
                 user_input_log = input("> ")
-                # user_input_log = keypress()
-                # user_input = keypress()ii
+
                 if user_input_log == 'i':
                     date, time = log_date_time(timestamp)
-                    # print(timestamp_split)
-                    # print('Time:', time)
-                    # print('Date:', date)
                     status_id = '1'
                     print('Logged in.')
                     log_event(date, time, status_id)
