@@ -11,12 +11,10 @@ from config import config
 from connection import single_command
 
 
-# TODO: Create a function who gets the time es an input and dependen on the
-# input of the user connect with other commands over psycopg2
-# create a query for the user to look up specific times and dates to update or
-# correct and also calculate the worked time on that day
-# and calulate for the week and month and year
-# Maybe hours minutes seconds , year month and day have to have each a column
+# TODO: Create a function which gets the time es an input and dependend on the
+# input of the user, connects with the postgreSQL Databse over the psycopg2
+# library. Creates a query for the user to look up specific times and dates to 
+# update, correct or calculate the worked time on that date.
 
 
 def start_screen():
